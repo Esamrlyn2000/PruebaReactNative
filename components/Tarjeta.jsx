@@ -1,17 +1,39 @@
 import React from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { View, Text, Image, StyleSheet } from 'react-native';
+import SwipeToDeleteItem from './Swipeable';
+import axios from 'axios';
 
-const Tarjeta = ({ imagen, nombre, genero, estado, ocupacion }) => {
+const Tarjeta = ({ id, imagen, nombre, marca, puertas, color, anio , refresh }) => {
+  const handleDelete = () => {
+    const config = {
+      method: "delete",
+      url: `http://172.20.1.70:5000/autos/${id}}`,      
+    };
+    axios(config).then((e) => {
+      alert("Auto eliminado exitosamente");
+      refresh();
+    }).catch((e) => {
+      console.error(e);
+      alert("Error al eliminar el auto");
+    }); 
+  };
+
   return (
-    <View style={styles.tarjeta}>
-      <Image source={{ uri: imagen }} style={styles.imagen} />
-      <View style={styles.detalles}>
-        <Text style={styles.nombre}>{nombre}</Text>
-        <Text>Género: {genero}</Text>
-        <Text>Estado: {estado}</Text>
-        <Text>Ocupación: {ocupacion}</Text>
-      </View>
-    </View>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SwipeToDeleteItem onDelete={() => handleDelete()}>
+        <View style={styles.tarjeta}>
+          <Image source={{ uri: imagen }} style={styles.imagen} />
+          <View style={styles.detalles}>
+            <Text style={styles.nombre}>{nombre}</Text>
+            <Text>Marca: {marca}</Text>
+            <Text>Cantidad de puertas: {puertas}</Text>
+            <Text>Color: {color}</Text>
+            <Text>Año del Vehiculo: {anio}</Text>
+          </View>
+        </View>
+      </SwipeToDeleteItem>
+    </GestureHandlerRootView>
   );
 };
 
@@ -35,6 +57,10 @@ const styles = StyleSheet.create({
   nombre: {
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  rightActions: {
+    width: 100,
+    justifyContent: 'flex-end',
   },
 });
 
