@@ -1,37 +1,41 @@
 import React from 'react';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-handler';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import SwipeToDeleteItem from './Swipeable';
 import axios from 'axios';
 
-const Tarjeta = ({ id, imagen, nombre, marca, puertas, color, anio , refresh }) => {
+const Tarjeta = ({ id, imagen, nombre, marca, puertas, color, anio, refresh, onClick }) => {
   const handleDelete = () => {
     const config = {
       method: "delete",
-      url: `http://172.20.1.70:5000/autos/${id}}`,      
+      url: `http://172.20.1.70:5000/autos/${id}}`,
     };
-    axios(config).then((e) => {
-      alert("Auto eliminado exitosamente");
-      refresh();
-    }).catch((e) => {
-      console.error(e);
-      alert("Error al eliminar el auto");
-    }); 
+    axios(config)
+      .then(() => {
+        alert("Auto eliminado exitosamente");
+        refresh();
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("Error al eliminar el auto");
+      });
   };
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SwipeToDeleteItem onDelete={() => handleDelete()}>
-        <View style={styles.tarjeta}>
-          <Image source={{ uri: imagen }} style={styles.imagen} />
-          <View style={styles.detalles}>
-            <Text style={styles.nombre}>{nombre}</Text>
-            <Text>Marca: {marca}</Text>
-            <Text>Cantidad de puertas: {puertas}</Text>
-            <Text>Color: {color}</Text>
-            <Text>Año del Vehiculo: {anio}</Text>
+        <TouchableOpacity onPress={onClick}>
+          <View style={styles.tarjeta}>
+            <Image source={{ uri: imagen }} style={styles.imagen} />
+            <View style={styles.detalles}>
+              <Text style={styles.nombre}>{nombre}</Text>
+              <Text>Marca: {marca}</Text>
+              <Text>Cantidad de puertas: {puertas}</Text>
+              <Text>Color: {color}</Text>
+              <Text>Año del Vehiculo: {anio}</Text>
+            </View>
           </View>
-        </View>
+        </TouchableOpacity>
       </SwipeToDeleteItem>
     </GestureHandlerRootView>
   );
